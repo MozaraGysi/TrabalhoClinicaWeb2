@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Paciente</title>
+    </h:head>
+    <h:body>
+        <h:form>
+            <p:growl/>
+            <p:panelGrid columns="2">
+                <f:facet name="footer">
+                    <div align="center">
+                        <p:commandButton value="Cancelar"
+                                         action="#{controlePaciente.cancelar()}"
+                                         ajax="false" immediate="true"/>
+                        <p:commandButton value="Salvar" icon="ui-icon-disk"
+                                         action="#{controlePaciente.salvar()}"
+                                         ajax="false"/>
+                    </div>
+                </f:facet>
+                <p:outputLabel value="ID"/>
+                <p:inputText value="#{controlePaciente.objeto.id}" size="10"/>
+                <p:outputLabel value="Altura" for="txtaltura"/>
+                <p:inputText value="#{controlePaciente.objeto.altura}" id="txtaltura"
+                             size="40" maxlength="40" placeholder="Obrigatório"/>
+                <p:outputLabel value="Histórico" for="txthistorico"/>
+                <p:inputText value="#{controlePaciente.objeto.historico}" id="txthistorico"
+                             size="40" placeholder="Obrigatório"/>
+                <p:outputLabel value="Nascimento" for="txtnascimento"/>
+                <p:calendar id="txtnascimento" value="#{controlePaciente.objeto.nascimento}" pattern="dd/MM/yyyy" locale="pt_BR" mask="true" >
+                <f:converter converterId="converterCalendar"/>
+                </p:calendar>
+                <p:outputLabel value="Nome" for="txtnome"/>
+                <p:inputText value="#{controlePaciente.objeto.nome}" id="txtnome"
+                             size="40" maxlength="40" placeholder="Obrigatório"/>
+                <p:outputLabel value="Peso" for="txtpeso"/>
+                <p:inputText value="#{controlePaciente.objeto.peso}" id="txtpeso"
+                             size="40" maxlength="40" placeholder="Obrigatório"/>
+                <p:outputLabel value="Sexo" for="txtsexo"/>
+                <p:selectOneRadio id="txtsexo" value="#{controlePaciente.objeto.sexo}">
+                    <f:selectItem itemLabel="Feminino" itemValue="Feminino"/>
+                    <f:selectItem itemLabel="Masculino" itemValue="Masculino"/>
+                </p:selectOneRadio>
+                <p:outputLabel value="Telefone" for="txttelefone"/>
+                <p:inputText value="#{controlePaciente.objeto.telefone}" id="txttelefone"
+                             size="40" maxlength="40" placeholder="Obrigatório"/>
+            </p:panelGrid>
+        </h:form>
+    </h:body>
+</html>
+
