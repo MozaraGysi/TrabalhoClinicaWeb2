@@ -3,66 +3,62 @@ package br.edu.ifsul.controle;
 import br.edu.ifsul.dao.EspecialidadeDAO;
 import br.edu.ifsul.modelo.Especialidade;
 import br.edu.ifsul.util.Util;
+import java.io.Serializable;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 
 @ManagedBean(name = "controleEspecialidade")
-@SessionScoped
-public class ControleEspecialidade {
-    private EspecialidadeDAO dao;
+@ViewScoped
+public class ControleEspecialidade implements Serializable {
+
+    private EspecialidadeDAO<Especialidade> dao;
     private Especialidade objeto;
     
     public ControleEspecialidade(){
-        dao = new EspecialidadeDAO();
+        dao = new EspecialidadeDAO<>();
     }
     
     public String listar(){
         return "/privado/especialidade/listar?faces-redirect=true";
     }
     
-    public String nova(){
-        setObjeto(new Especialidade());
-        return "formulario";
+    public void novo(){
+        objeto = new Especialidade();
     }
     
-    public String salvar(){
-        if(getDao().salvar(getObjeto())){
-            Util.mensagemInformacao(getDao().getMensagem());
-            return "listar";
-        }else {
-            Util.mensagemErro(getDao().getMensagem());
-            return "formulario";
+    public void salvar(){
+        boolean persistiu;
+        if (objeto.getId() == null){
+            persistiu = dao.persist(objeto);
+        } else {
+            persistiu = dao.merge(objeto);
+        }
+        if (persistiu){
+            Util.mensagemInformacao(dao.getMensagem());
+        } else {
+            Util.mensagemErro(dao.getMensagem());
         }
     }
     
-    public String cancelar(){
-        return "listar";
-    }
-    
-    public String editar(Integer id){
-        try{
-            setObjeto(getDao().localizar(id));
-            return "formulario";
-        }catch (Exception e){
-            Util.mensagemErro("Erro ao recuperar objeto: "+Util.getMensagemErro(e));
-            return "listar";
-        }
+    public void editar(Integer id){
+        objeto = dao.localizar(id);
     }
     
     public void remover(Integer id){
-        setObjeto(getDao().localizar(id));
-        if(getDao().remover(getObjeto())){
-            Util.mensagemInformacao(getDao().getMensagem());
-        }else {
-            Util.mensagemErro(getDao().getMensagem());
+        objeto = dao.localizar(id);
+        if (dao.remove(objeto)){
+            Util.mensagemInformacao(dao.getMensagem());
+        } else {
+            Util.mensagemErro(dao.getMensagem());
         }
     }
-    
-    public EspecialidadeDAO getDao() {
+
+    public EspecialidadeDAO<Especialidade> getDao() {
         return dao;
     }
 
-    public void setDao(EspecialidadeDAO dao) {
+    public void setDao(EspecialidadeDAO<Especialidade> dao) {
         this.dao = dao;
     }
 
@@ -73,5 +69,5 @@ public class ControleEspecialidade {
     public void setObjeto(Especialidade objeto) {
         this.objeto = objeto;
     }
-    
-}
+   
+    }

@@ -3,70 +3,67 @@ package br.edu.ifsul.controle;
 
 import br.edu.ifsul.dao.EspecialidadeDAO;
 import br.edu.ifsul.dao.MedicoDAO;
+import br.edu.ifsul.modelo.Especialidade;
 import br.edu.ifsul.modelo.Medico;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import br.edu.ifsul.util.Util;
+import java.io.Serializable;
+import javax.faces.bean.ViewScoped;
 
 @ManagedBean(name = "controleMedico")
-@SessionScoped
-public class ControleMedico {
-    private MedicoDAO dao;
+@ViewScoped
+public class ControleMedico implements Serializable {
+
+    private MedicoDAO<Medico> dao;
     private Medico objeto;
-    private EspecialidadeDAO daoEspecialidade;
+    private EspecialidadeDAO<Especialidade> daoespecial;
     
     public ControleMedico(){
-         dao = new MedicoDAO();
-         daoEspecialidade = new EspecialidadeDAO();
+        dao = new MedicoDAO<>();
+        daoespecial = new EspecialidadeDAO<>();
     }
     
     public String listar(){
         return "/privado/medico/listar?faces-redirect=true";
     }
     
-    public String nova(){
-        setObjeto(new Medico());
-        return "formulario";
+    public void novo(){
+        objeto = new Medico();
     }
     
-    public String salvar(){
-        if(getDao().salvar(getObjeto())){
-            Util.mensagemInformacao(getDao().getMensagem());
-            return "listar";
-        }else {
-            Util.mensagemErro(getDao().getMensagem());
-            return "formulario";
+    public void salvar(){
+        boolean persistiu;
+        if (objeto.getId() == null){
+            persistiu = dao.persist(objeto);
+        } else {
+            persistiu = dao.merge(objeto);
+        }
+        if (persistiu){
+            Util.mensagemInformacao(dao.getMensagem());
+        } else {
+            Util.mensagemErro(dao.getMensagem());
         }
     }
     
-    public String cancelar(){
-        return "listar";
-    }
-    
-    public String editar(Integer id){
-        try{
-            setObjeto(getDao().localizar(id));
-            return "formulario";
-        }catch (Exception e){
-            Util.mensagemErro("Erro ao recuperar objeto: "+Util.getMensagemErro(e));
-            return "listar";
-        }
+    public void editar(Integer id){
+        objeto = dao.localizar(id);
     }
     
     public void remover(Integer id){
-        setObjeto(getDao().localizar(id));
-        if(getDao().remover(getObjeto())){
-            Util.mensagemInformacao(getDao().getMensagem());
-        }else {
-            Util.mensagemErro(getDao().getMensagem());
+        objeto = dao.localizar(id);
+        if (dao.remove(objeto)){
+            Util.mensagemInformacao(dao.getMensagem());
+        } else {
+            Util.mensagemErro(dao.getMensagem());
         }
     }
-    
-    public MedicoDAO getDao() {
+
+    public MedicoDAO<Medico> getDao() {
         return dao;
     }
 
-    public void setDao(MedicoDAO dao) {
+    public void setDao(MedicoDAO<Medico> dao) {
         this.dao = dao;
     }
 
@@ -77,12 +74,13 @@ public class ControleMedico {
     public void setObjeto(Medico objeto) {
         this.objeto = objeto;
     }
-    
-    public EspecialidadeDAO getDaoEspecialidade() {
-        return daoEspecialidade;
+
+    public EspecialidadeDAO<Especialidade> getDaoespecial() {
+        return daoespecial;
     }
 
-    public void setDaoEspecialidade(EspecialidadeDAO daoEspecialidade) {
-        this.daoEspecialidade = daoEspecialidade;
+    public void setDaoespecial(EspecialidadeDAO<Especialidade> daoespecial) {
+        this.daoespecial = daoespecial;
     }
-}
+
+    }

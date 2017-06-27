@@ -2,39 +2,105 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
     <ui:composition template="/templates/template.xhtml">
-        <ui:define name="titulo">Sistema com JSF</ui:define>
+        <ui:define name="titulo">Sistema Clínico</ui:define>
         <ui:define name="conteudo">
-             <h:form>
-            <p:growl/>
-            <p:messages/>
-            <p:commandButton value="Novo" action="#{controleMedicamento.nova()}"
-                             ajax="false" icon="ui-icon-plus"/>
-            <p:dataTable value="#{controleMedicamento.dao.lista}" var="obj">
-                <p:column headerText="ID">
-                    <p:outputLabel value="#{obj.id}"/>
-                </p:column>
-                <p:column headerText="Nome">
-                    <p:outputLabel value="#{obj.nome}"/>
-                </p:column>
-                <p:column headerText="Ações">
-                    <div align="center">
-                        <p:commandButton action="#{controleMedicamento.editar(obj.id)}"
-                                         icon="ui-icon-pencil"
-                                         ajax="false"
-                                         title="Editar"/>
-                        <p:commandButton action="#{controleMedicamento.remover(obj.id)}"
-                                         icon="ui-icon-trash"
-                                         ajax="false"
-                                         title="Remover"
-                                         onclick="if(!confirm('Confirma a exclusão?')) return false"/>
-                    </div>
-                </p:column>
-            </p:dataTable>
-        </h:form>
+            <h:form id="formListagem">
+                <p:growl/>
+                <p:messages/>
+                <p:commandButton value="Novo Medicamento"
+                                 actionListener="#{controleMedicamento.novo()}"                                 
+                                 icon="ui-icon-plus"
+                                 oncomplete="PF('dlg').show();"
+                                 update=":formEdicao"/>
+                <div align="center">
+                    <p:panelGrid columns="11">
+                        <p:outputLabel value="Ordem:"/>
+                        <p:selectOneMenu id="ordem" value="#{controleMedicamento.dao.ordem}">
+                            <f:selectItem itemLabel="ID" itemValue="id"/>
+                            <f:selectItem itemLabel="Nome" itemValue="nome"/>              
+                            <p:ajax update="listagem"/>
+                        </p:selectOneMenu>     
+                        <p:outputLabel value="Filtro:"/>
+                        <p:inputText value="#{controleMedicamento.dao.filtro}" size="30">
+                            <p:ajax update="listagem" event="keyup"/>
+                        </p:inputText>
+                        <p:commandButton value="Filtrar" update="listagem"/>
+                        <p:outputLabel value="Máximo de objetos: "/>
+                        <p:inputText value="#{controleMedicamento.dao.maximoObjetos}" size="3">
+                            <p:ajax update="listagem" event="keyup"/>
+                        </p:inputText>
+                        <p:commandButton value="Primeiro"
+                                         actionListener="#{controleMedicamento.dao.primeiro()}"
+                                         update="listagem"/>
+                        <p:commandButton value="Anterior"
+                                         actionListener="#{controleMedicamento.dao.anterior()}"
+                                         update="listagem"/>                        
+                        <p:commandButton value="Próximo"
+                                         actionListener="#{controleMedicamento.dao.proximo()}"
+                                         update="listagem"/>  
+                        <p:commandButton value="Último"
+                                         actionListener="#{controleMedicamento.dao.ultimo()}"
+                                         update="listagem"/>                        
+                    </p:panelGrid>
+                </div>
+                <p:dataTable value="#{controleMedicamento.dao.listaObjetos}"
+                             var="obj" id="listagem" >
+                    <f:facet name="footer">
+                        <p:outputLabel value="#{controleMedicamento.dao.mensagemNavegacao}"/>
+                    </f:facet>
+                    <p:column headerText="ID">
+                        <p:outputLabel value="#{obj.id}"/>
+                    </p:column>
+                    <p:column headerText="Nome">
+                        <p:outputLabel value="#{obj.nome}"/>
+                    </p:column>           
+                    <p:column headerText="Ações">
+                        <div align="center">
+                            <p:commandButton actionListener="#{controleMedicamento.editar(obj.id)}"
+                                             icon="ui-icon-pencil"                                             
+                                             title="Editar"
+                                             oncomplete="PF('dlg').show();"
+                                             update=":formEdicao"/>
+                            <p:commandButton actionListener="#{controleMedicamento.remover(obj.id)}"
+                                             icon="ui-icon-trash" update="@form"
+                                             title="Remover"
+                                             onclick="if (!confirm('Confirma a exclusão?'))
+                                                     return false"/>
+                        </div>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
         </ui:define>
-    </ui:composition>
+        <ui:define name="dialogos">
+            <p:dialog widgetVar="dlg" header="Edição" modal="true" resizable="false"
+                      position="center,top">
+                <h:form id="formEdicao">
+                    <p:growl/>
+                    <div align="center">
+                        <p:panelGrid columns="2">
+                            <f:facet name="footer">
+                                <div align="center">
+                                    <p:commandButton value="Salvar"
+                                                     icon="ui-icon-disk"
+                                                     actionListener="#{controleMedicamento.salvar()}"
+                                       oncomplete="if(!args.validationFailed){PF('dlg').hide();}"
+                                       update=":formEdicao :formListagem"/>
+                                </div>
+                            </f:facet>
+                            <p:outputLabel value="ID"/>
+                            <p:inputText value="#{controleMedicamento.objeto.id}" size="10"/>
+                            <p:outputLabel value="Nome" for="txtNome"/>
+                            <p:inputText id="txtNome" value="#{controleMedicamento.objeto.nome}"
+                                         size="50" maxlength="50" placeholder="Obrigatório"/>                                                                                           
+                        </p:panelGrid>
+                    </div>
+                </h:form>
+                <ui:include src="/templates/ajaxstatus.xhtml"/>
+            </p:dialog>
+        </ui:define>
+    </ui:composition>       
 </html>
-

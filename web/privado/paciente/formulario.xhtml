@@ -24,11 +24,10 @@
                 <p:outputLabel value="ID"/>
                 <p:inputText value="#{controlePaciente.objeto.id}" size="10"/>
                 <p:outputLabel value="Altura" for="txtaltura"/>
-                <p:inputText value="#{controlePaciente.objeto.altura}" id="txtaltura"
-                             size="40" maxlength="40" placeholder="Obrigatório"/>
+                <p:inputNumber value="#{controlePaciente.objeto.altura}" id="txtaltura" 
+                                emptyValue="zero"/> 
                 <p:outputLabel value="Histórico" for="txthistorico"/>
-                <p:inputText value="#{controlePaciente.objeto.historico}" id="txthistorico"
-                             size="40" placeholder="Obrigatório"/>
+                <p:inputTextarea rows="6" cols="33" value="#{controlePaciente.objeto.historico}" id="txthistorico"/>
                 <p:outputLabel value="Nascimento" for="txtnascimento"/>
                 <p:calendar id="txtnascimento" value="#{controlePaciente.objeto.nascimento}" pattern="dd/MM/yyyy" locale="pt_BR" mask="true" >
                 <f:converter converterId="converterCalendar"/>
@@ -37,16 +36,17 @@
                 <p:inputText value="#{controlePaciente.objeto.nome}" id="txtnome"
                              size="40" maxlength="40" placeholder="Obrigatório"/>
                 <p:outputLabel value="Peso" for="txtpeso"/>
-                <p:inputText value="#{controlePaciente.objeto.peso}" id="txtpeso"
-                             size="40" maxlength="40" placeholder="Obrigatório"/>
+                <p:inputNumber value="#{controlePaciente.objeto.peso}" id="txtpeso" 
+                                emptyValue="zero"/> 
                 <p:outputLabel value="Sexo" for="txtsexo"/>
                 <p:selectOneRadio id="txtsexo" value="#{controlePaciente.objeto.sexo}">
                     <f:selectItem itemLabel="Feminino" itemValue="Feminino"/>
                     <f:selectItem itemLabel="Masculino" itemValue="Masculino"/>
                 </p:selectOneRadio>
                 <p:outputLabel value="Telefone" for="txttelefone"/>
-                <p:inputText value="#{controlePaciente.objeto.telefone}" id="txttelefone"
-                             size="40" maxlength="40" placeholder="Obrigatório"/>
+                <p:inputMask id="txttelefone"
+                             value="#{controlePaciente.objeto.telefone}"
+                                     mask="(99)99999-9999"/>
             </p:panelGrid>
         </h:form>
     </h:body>

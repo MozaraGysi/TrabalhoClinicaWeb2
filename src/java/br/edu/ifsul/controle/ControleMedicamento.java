@@ -6,65 +6,60 @@ import br.edu.ifsul.modelo.Medicamento;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import br.edu.ifsul.util.Util;
+import java.io.Serializable;
+import javax.faces.bean.ViewScoped;
 
 @ManagedBean(name = "controleMedicamento")
-@SessionScoped
-public class ControleMedicamento {
-    private MedicamentoDAO dao;
+@ViewScoped
+public class ControleMedicamento implements Serializable {
+
+    private MedicamentoDAO<Medicamento> dao;
     private Medicamento objeto;
     
     public ControleMedicamento(){
-        dao = new MedicamentoDAO();
+        dao = new MedicamentoDAO<>();
     }
     
     public String listar(){
         return "/privado/medicamento/listar?faces-redirect=true";
     }
     
-    public String nova(){
-        setObjeto(new Medicamento());
-        return "formulario";
+    public void novo(){
+        objeto = new Medicamento();
     }
     
-    public String salvar(){
-        if(getDao().salvar(getObjeto())){
-            Util.mensagemInformacao(getDao().getMensagem());
-            return "listar";
-        }else {
-            Util.mensagemErro(getDao().getMensagem());
-            return "formulario";
+    public void salvar(){
+        boolean persistiu;
+        if (objeto.getId() == null){
+            persistiu = dao.persist(objeto);
+        } else {
+            persistiu = dao.merge(objeto);
+        }
+        if (persistiu){
+            Util.mensagemInformacao(dao.getMensagem());
+        } else {
+            Util.mensagemErro(dao.getMensagem());
         }
     }
     
-    public String cancelar(){
-        return "listar";
-    }
-    
-    public String editar(Integer id){
-        try{
-            setObjeto(getDao().localizar(id));
-            return "formulario";
-        }catch (Exception e){
-            Util.mensagemErro("Erro ao recuperar objeto: "+Util.getMensagemErro(e));
-            return "listar";
-        }
+    public void editar(Integer id){
+        objeto = dao.localizar(id);
     }
     
     public void remover(Integer id){
-        setObjeto(getDao().localizar(id));
-        if(getDao().remover(getObjeto())){
-            Util.mensagemInformacao(getDao().getMensagem());
-        }else {
-            Util.mensagemErro(getDao().getMensagem());
+        objeto = dao.localizar(id);
+        if (dao.remove(objeto)){
+            Util.mensagemInformacao(dao.getMensagem());
+        } else {
+            Util.mensagemErro(dao.getMensagem());
         }
     }
-    
 
-    public MedicamentoDAO getDao() {
+    public MedicamentoDAO<Medicamento> getDao() {
         return dao;
     }
 
-    public void setDao(MedicamentoDAO dao) {
+    public void setDao(MedicamentoDAO<Medicamento> dao) {
         this.dao = dao;
     }
 
@@ -75,5 +70,5 @@ public class ControleMedicamento {
     public void setObjeto(Medicamento objeto) {
         this.objeto = objeto;
     }
-    
-}
+
+    }
