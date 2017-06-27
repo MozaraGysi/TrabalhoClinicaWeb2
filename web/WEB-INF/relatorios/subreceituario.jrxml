@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.2.2.final using JasperReports Library version 6.2.2  -->
-<!-- 2017-06-26T23:25:19 -->
+<!-- 2017-06-27T19:37:15 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subreceituario" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="cf07e9f4-c283-4469-93c1-ed316da7dd66">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Banco.xml"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
@@ -23,23 +23,23 @@
 		<fieldDescription><![CDATA[validade]]></fieldDescription>
 	</field>
 	<columnHeader>
-		<band height="30">
+		<band height="20">
 			<staticText>
-				<reportElement x="30" y="0" width="90" height="30" uuid="ff00b8ba-ce3b-4293-af90-4236bc60d6a8"/>
+				<reportElement x="0" y="0" width="90" height="20" uuid="ff00b8ba-ce3b-4293-af90-4236bc60d6a8"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="true" isItalic="true"/>
 				</textElement>
 				<text><![CDATA[ID]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="120" y="0" width="300" height="30" uuid="6bbcb2d8-e77b-4dc1-88a8-5ccefa80ee1d"/>
+				<reportElement x="90" y="0" width="330" height="20" uuid="6bbcb2d8-e77b-4dc1-88a8-5ccefa80ee1d"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="true" isItalic="true"/>
 				</textElement>
 				<text><![CDATA[Posologia]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="420" y="0" width="144" height="30" uuid="fdf61a97-37dd-49e1-8ca6-05a03b9adba7"/>
+				<reportElement x="420" y="0" width="175" height="20" uuid="fdf61a97-37dd-49e1-8ca6-05a03b9adba7"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="true" isItalic="true"/>
 				</textElement>
@@ -48,21 +48,21 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="125" splitType="Stretch">
+		<band height="20" splitType="Stretch">
 			<textField>
-				<reportElement x="30" y="0" width="90" height="30" uuid="9f711d2f-492b-4f0a-8746-4b7363f5d961"/>
+				<reportElement x="0" y="0" width="90" height="20" uuid="9f711d2f-492b-4f0a-8746-4b7363f5d961"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="120" y="0" width="300" height="30" uuid="606410c7-d2af-4517-9990-878f079164ef"/>
+				<reportElement x="90" y="0" width="330" height="20" uuid="606410c7-d2af-4517-9990-878f079164ef"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{posologia}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy">
-				<reportElement x="420" y="0" width="145" height="30" uuid="c7b82cd6-15e7-4103-b0d9-7c3631bbe105"/>
+				<reportElement x="420" y="0" width="175" height="20" uuid="c7b82cd6-15e7-4103-b0d9-7c3631bbe105"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{validade}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{validade}.getTime()]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
